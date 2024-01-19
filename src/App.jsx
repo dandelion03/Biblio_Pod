@@ -16,21 +16,18 @@ function App() {
   return (
     <>
       {/* <BookProvider> */}
-       
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/home" element="#" />
-          <Route path="/about" element="#" />
-          <Route path="/signup" element={<SignUp/>} />
-          <Route path="/login" element={<SignIn/>} />
-          {/* <Route path="/search" element={<SearchPage />} /> */}
-          <Route path="/read" element={<EpubReader />} />
-          {/* <Route path="/Library" element={<MyLibrary />} /> */}
-        </Routes>
-      {/* </BookProvider> */}
-      {!isReadRoute &&!isSignup&& <Footer />}
-    
 
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/home" element="#" />
+        <Route path="/about" element="#" />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<SignIn />} />
+        {/* <Route path="/search" element={<SearchPage />} /> */}
+        <Route path="/read" element={<EpubReader />} />
+        {/* <Route path="/Library" element={<MyLibrary />} /> */}
+      </Routes>
+      {/* </BookProvider> */}
     </>
   );
 }
