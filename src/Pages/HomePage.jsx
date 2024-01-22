@@ -3,17 +3,18 @@ import axios from "axios";
 import ePub from "epubjs";
 import { BookDisplay } from "../components/BookDisplay";
 import { ContinueReading } from "../components/ContinueReading";
-import { Input } from "../ui/input";
+import { Input } from "../components/ui/input";
 import "../index.css";
 import { MdNavigateNext } from "react-icons/md";
 import { BsListColumnsReverse } from "react-icons/bs";
 import { NewNav } from "../components/NewNav";
 import { Link } from "react-router-dom";
-import { BulkUpload } from "../components/Modals/BulkUpload";
 import Footer from "../components/Footer";
 export const HomePage = () => {
   const [fileDetails, setFileDetails] = useState([]);
   const [bookGoogle, setbookGoogle] = useState([]);
+  const selectedBook = JSON.parse(localStorage.getItem("selectedBook"));
+
   const handleFileChange = async (event) => {
     const files = Array.from(event.target.files);
 
@@ -79,9 +80,9 @@ export const HomePage = () => {
   };
 
   const fetchBookDetails = async (title, author, language) => {
-    const urlApi = `https://www.googleapis.com/books/v1/volumes?q=${
-      title + " " + author + " " + "&langRestrict=en"
-    }`;
+    const urlApi = `https://www.googleapis.com/books/v1/volumes?q=intitle:${title}+
+    inauthor:${author}&printType=books&langRestrict=en`;
+
     console.log(urlApi);
     try {
       const response = await axios.get(urlApi);
@@ -97,12 +98,14 @@ export const HomePage = () => {
       return {};
     }
   };
-  console.log(bookGoogle);
+  console.log(fileDetails);
 
   return (
     <>
       <NewNav />
-      <div className="library-container">
+      <div
+        className={`library-container ${selectedBook === null ? "m-auto" : ""}`}
+      >
         <ContinueReading />
 
         {fileDetails.length > 0 ? (

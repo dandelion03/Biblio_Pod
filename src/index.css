@@ -6,7 +6,7 @@
 #root {
   display: flex;
   flex-direction: column;
-
+  justify-content: space-between;
   min-height: 100vh;
 }
 *,
@@ -17,6 +17,9 @@ body {
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+.op-1 {
+  opacity: 1 !important;
 }
 nav {
   padding-top: 0 !important;
@@ -31,7 +34,7 @@ code {
   overflow: hidden;
   position: relative;
   margin: auto;
-  padding: 2rem 0;
+  padding: 0 0;
 }
 
 .epub-viewer .page {
@@ -87,6 +90,9 @@ code {
   flex-wrap: wrap;
   margin: auto;
   padding: 9rem 4rem;
+}
+.block-transition {
+  transition: 0.4s ease-in-out;
 }
 .column {
   display: flex;
@@ -194,7 +200,7 @@ code {
 }
 .lib-title {
   padding-bottom: 10px;
-  font-size: 3em;
+  font-size: 2em;
 }
 .lib-inner-container {
   display: flex;

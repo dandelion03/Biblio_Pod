@@ -8,6 +8,8 @@ import { BiFolder } from "react-icons/bi";
 import { BiFlag } from "react-icons/bi";
 import { TbSettings } from "react-icons/tb";
 import { BiAddToQueue } from "react-icons/bi";
+import { BiHighlight } from "react-icons/bi";
+
 import { BulkUpload } from "./Modals/BulkUpload";
 export const NewNav = () => {
   const [isSidebarLocked, setSidebarLocked] = useState(true);
@@ -68,11 +70,10 @@ export const NewNav = () => {
       >
         <div className="logo_items flex items-center">
           <span className="nav_image">
-            <img src="small-logo_1.svg" alt="logo_img" />
+            <img src="small-logo_1.png" alt="logo_img" />
           </span>
           <span className="logo_name">
-            {" "}
-            <img src="logo-long.svg" alt="logo_img" />
+            <img src="logo-long.png" alt="logo_img" />
           </span>
         </div>
         <div className="menu_container">
@@ -98,6 +99,12 @@ export const NewNav = () => {
                 <Link to="/" className="link flex items-center">
                   <BiFolder className="nav-logo" />
                   <span>Library</span>
+                </Link>
+              </li>
+              <li className="item">
+                <Link to="/highlights" className="link flex items-center">
+                  <BiHighlight className="nav-logo" />
+                  <span>Highlights</span>
                 </Link>
               </li>
             </ul>

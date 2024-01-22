@@ -9,9 +9,12 @@ import { AiOutlineFullscreen } from "react-icons/ai";
 import { GrNext } from "react-icons/gr";
 import { GrPrevious } from "react-icons/gr";
 import { FiMoon } from "react-icons/fi";
-import {CircularProgress} from "@nextui-org/react";
+import { CircularProgress } from "@nextui-org/react";
 import { BiHomeAlt2 } from "react-icons/bi";
 import { Link } from "react-router-dom";
+import TextSelectionCoordinates from "../components/Modals/TextSelectionCoordinates";
+import { ReaderMenu } from "../components/Modals/ReaderMenu";
+
 function EpubReader() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -23,12 +26,15 @@ function EpubReader() {
   const [book, setBook] = useState(null);
   const [rendition, setRendition] = useState(null);
   const [bookData, setBookData] = useState(null);
-  const [loading, setLoading] = useState(true); // Added loading state
+  const [loading, setLoading] = useState(true);
+  const [selectedTextCoords, setSelectedTextCoords] = useState({ x: 55, y: 0 });
 
   useEffect(() => {
     const fetchBook = async () => {
       try {
-        const response = await axios.get(`https://www.googleapis.com/books/v1/volumes?q=${bookValue}`);
+        const response = await axios.get(
+          `https://www.googleapis.com/books/v1/volumes?q=${bookValue}`
+        );
         const bookInfo = response.data.items[0].volumeInfo;
         setBookData(bookInfo);
         console.log(bookInfo);
@@ -48,7 +54,7 @@ function EpubReader() {
       }
 
       try {
-        const response = await fetch("test.epub");
+        const response = await fetch("test3.epub");
         const arrayBuffer = await response.arrayBuffer();
         const newBook = ePub(arrayBuffer);
 
@@ -58,12 +64,10 @@ function EpubReader() {
           await newBook.locations.generate(1024);
         }
 
-        // Render book only after book is set
         renderBook(newBook);
       } catch (error) {
         console.error("Error loading book:", error);
-      }finally {
-        // Set loading to false after attempting to load the book
+      } finally {
         setLoading(false);
       }
     };
@@ -77,9 +81,10 @@ function EpubReader() {
     }
 
     const newRendition = loadedBook.renderTo("viewer", {
-      width: "1024",
-      height: "87vh",
-      margin: "auto",
+      width: "100%",
+      height: "90vh",
+      ignoreClass: "annotator-hl",
+      manager: "default",
     });
 
     newRendition.display();
@@ -91,50 +96,52 @@ function EpubReader() {
       body: { background: "black", color: "white" },
     });
     newRendition.themes.register("default", {
-      body: { background: "white", color: "black" },
+      body: {
+        background: "white",
+        color: "black",
+        "font-size": "1.1rem !important",
+      },
     });
     newRendition.themes.select(isDarkTheme ? "dark" : "default");
   };
 
   useEffect(() => {
-    // Retrieve the last CFI from localStorage
-    const savedCFI = localStorage.getItem('currentCFI');
+    const savedCFI = localStorage.getItem("currentCFI");
 
-    // Use the saved CFI to display the book at the last location
     if (rendition && savedCFI) {
       rendition.display(savedCFI);
     }
   }, [rendition]);
 
   useEffect(() => {
-    // Add event listeners for keyboard navigation
     const handleKeyDown = (event) => {
-      if (event.key === 'ArrowRight') {
+      if (event.key === "ArrowRight") {
         nextBtn();
-      } else if (event.key === 'ArrowLeft') {
+      } else if (event.key === "ArrowLeft") {
         backBtn();
       }
     };
-    
-    document.addEventListener('keydown', handleKeyDown);
 
-    // Cleanup the event listener
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
+    if (rendition) {
+      document.addEventListener("keydown", handleKeyDown);
+
+      return () => {
+        document.removeEventListener("keydown", handleKeyDown);
+      };
+    }
   }, [rendition]);
 
   const nextBtn = () => {
     if (rendition) {
       rendition.next();
       const newCFI = rendition.location.start.cfi;
-const newPercentage = rendition.book.locations.percentageFromCfi(newCFI) * 100;
-setCurrentCFI({ newCFI, newPercentage });
-
-// Save the current CFI to localStorage
-localStorage.setItem('currentCFI', newCFI);
-// Save the current percentage to localStorage
-localStorage.setItem('currentPercentageFromCFI', newPercentage);
+      const newPercentage =
+        rendition.book.locations.percentageFromCfi(newCFI) * 100;
+      setCurrentCFI((prevCFI) => {
+        localStorage.setItem("currentCFI", newCFI);
+        localStorage.setItem("currentPercentageFromCFI", newPercentage);
+        return { newCFI, newPercentage };
+      });
     }
   };
 
@@ -142,16 +149,15 @@ localStorage.setItem('currentPercentageFromCFI', newPercentage);
     if (rendition) {
       rendition.prev();
       const newCFI = rendition.location.start.cfi;
-      const newPercentage = rendition.book.locations.percentageFromCfi(newCFI) * 100;
-      setCurrentCFI({ newCFI, newPercentage });
-      
-      // Save the current CFI to localStorage
-      localStorage.setItem('currentCFI', newCFI);
-      // Save the current percentage to localStorage
-      localStorage.setItem('currentPercentageFromCFI', newPercentage);
+      const newPercentage =
+        rendition.book.locations.percentageFromCfi(newCFI) * 100;
+      setCurrentCFI((prevCFI) => {
+        localStorage.setItem("currentCFI", newCFI);
+        localStorage.setItem("currentPercentageFromCFI", newPercentage);
+        return { newCFI, newPercentage };
+      });
     }
   };
-
   const toggleTheme = () => {
     setIsDarkTheme(!isDarkTheme);
     if (rendition) {
@@ -160,10 +166,8 @@ localStorage.setItem('currentPercentageFromCFI', newPercentage);
   };
 
   useEffect(() => {
-    // Store the selected book in localStorage whenever it changes
     localStorage.setItem("selectedBook", JSON.stringify(bookData));
   }, [bookData]);
-
   const toggleFullscreen = () => {
     const root = document.getElementById("root");
     if (root) {
@@ -175,14 +179,15 @@ localStorage.setItem('currentPercentageFromCFI', newPercentage);
       setIsFullscreen(!isFullscreen);
     }
   };
+
   if (loading) {
     return (
       <div className="h-screen w-full flex justify-center items-center">
-           <CircularProgress size="lg" label="Loading..."/>
-
+        <CircularProgress size="lg" label="Loading..." />
       </div>
     );
   }
+
   if (!bookData) {
     return (
       <div className="addBook-error-handle">
@@ -196,11 +201,22 @@ localStorage.setItem('currentPercentageFromCFI', newPercentage);
   }
 
   return (
-    <div className={isDarkTheme ? "dark" : "default"}>
+    <div className={isDarkTheme ? "dark h-lvh	" : "default h-lvh	"}>
       <div className="titlebar">
-        <div><Link to="/" >
-            <BiHomeAlt2 className="icon-bookmark-empty"/>
-            </Link></div>
+        <TextSelectionCoordinates rendition={rendition} />
+
+        <div className="flex gap-5">
+          <Link to="/">
+            <BiHomeAlt2 className="icon-bookmark-empty" />
+          </Link>
+          <ReaderMenu
+            book={book}
+            rendition={rendition}
+            className="icon-bookmark-empty"
+            bookValue={bookValue}
+          />
+        </div>
+
         <div id="metainfo">
           <span id="book-title">{bookData.authors}</span>
           <span id="title-separator">&nbsp;&nbsp;–&nbsp;&nbsp;</span>
@@ -230,14 +246,17 @@ localStorage.setItem('currentPercentageFromCFI', newPercentage);
         </div>
       </div>
 
-      <div>
+      <div className={isDarkTheme ? "dark" : "default"}>
         <div
           id="divider"
           className={
             !book ? "hidden" : `show ${isDarkTheme ? "lightDivider" : ""}`
           }
         />
-        <div id="viewer" className="epub-viewer" />
+        <div
+          id="viewer"
+          className={`epub-viewer ${isFullscreen ? "h-lvh	" : ""}`}
+        />
 
         <button
           className={
