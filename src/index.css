@@ -43,6 +43,10 @@ code {
 }
 .hidden {
   display: none;
+  transition: 0.4s ease-in-out;
+}
+.not-hidden{
+  transition: 0.4s ease-in-out;
 }
 .next {
   position: absolute;

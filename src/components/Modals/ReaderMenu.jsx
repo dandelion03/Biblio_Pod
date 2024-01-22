@@ -134,11 +134,11 @@ export const ReaderMenu = ({ book, rendition }) => {
     <div>
       <IoMdMenu className="cursor-pointer" onClick={handleMenuOpening} />
       <div
-        className={`menu-con flex-col flex w-72 bg-zinc-300 h-screen absolute top-0 left-0 ${
-          !MenuisOpen ? "hidden" : "block-transition"
+        className={`menu-con flex-col flex w-72 bg-zinc-300 h-screen fixed top-0 left-0 ${
+          !MenuisOpen ? "hidden" : "not-hidden"
         }`}
       >
-        <div className="flex  w-64 gap-8 p-1 justify-between">
+        <div className="flex  w-full gap-8 p-1 justify-between">
           <div></div>
           <IoIosCloseCircleOutline
             className="cursor-pointer X-icon"
@@ -175,7 +175,7 @@ export const ReaderMenu = ({ book, rendition }) => {
               </div>
             </TabsTrigger>
           </TabsList>
-          <TabsContent className="h-5/6  mb-4" value="content">
+          <TabsContent className="h-5/6  " value="content">
             <div id="style-4" className="scrollbar text-left p-l0-1 pl-4">
               <div className="force-overflow flex flex-col gap-5">
                 {chapters.map((chapter, i) => (
@@ -208,13 +208,12 @@ export const ReaderMenu = ({ book, rendition }) => {
                       </div>
                       <div className="flex justify-between px-3">
                         <p
-                          className="underline"
+                          className="underline cursor-pointer"
                           onClick={() => {
                             handleGotoPage(cfiRange);
                           }}
                         >
-                          {/* You can customize the content here */}
-                          Go to Page
+                            Go to Page
                         </p>
                         <div className="flex items-center gap-1">
                           <FaRegTrashCan />

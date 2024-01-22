@@ -53,11 +53,11 @@ export const SignUp = () => {
                   <Label type="email" htmlFor="name">
                     Email
                   </Label>
-                  <Input id="email" placeholder="Your Email" />
+                  <Input id="email" placeholder="your@mail.com" />
                 </div>
                 <div className="flex flex-col space-y-1.5">
                   <Label htmlFor="name">Password</Label>
-                  <Input type="password" id="password" placeholder="abcd123" />
+                  <Input type="password" id="password" placeholder="Enter your password" />
                 </div>
               </div>
             </form>

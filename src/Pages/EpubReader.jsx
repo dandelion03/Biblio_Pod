@@ -99,7 +99,7 @@ function EpubReader() {
       body: {
         background: "white",
         color: "black",
-        "font-size": "1.1rem !important",
+        
       },
     });
     newRendition.themes.select(isDarkTheme ? "dark" : "default");

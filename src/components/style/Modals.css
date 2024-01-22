@@ -33,7 +33,7 @@
   margin-bottom: 10px;
 }
 .force-overflow {
-  min-height: 450px;
+  height: 100%;
 }
 .force-overflow-2 {
   min-height: 60px;
@@ -73,7 +73,10 @@
 .chapter-title {
   border-radius: 5px;
   width: 91%;
+  min-height: 2.5rem;
+  padding: 20px 5px;
   transition: 0.1s ease-in-out;
+
 }
 .chapter-title:hover {
   border-radius: 5px;

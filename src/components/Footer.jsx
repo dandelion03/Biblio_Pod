@@ -8,8 +8,8 @@ const Footer = () => {
         <div className="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
           <span className="text-sm text-gray-500 sm:text-center ">
             © 2023{" "}
-            <Link to="https://flowbite.com/" className="hover:underline">
-              Hamza is a dick
+            <Link to="/" className="hover:underline">
+             BiblioPod 
             </Link>
             . All Rights Reserved.
           </span>
