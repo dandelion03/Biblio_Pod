@@ -7,29 +7,22 @@ import { BiCloudUpload } from "react-icons/bi";
 import { BiFolder } from "react-icons/bi";
 import { BiFlag } from "react-icons/bi";
 import { TbSettings } from "react-icons/tb";
-import { BiAddToQueue } from "react-icons/bi";
+
 import { BiHighlight } from "react-icons/bi";
 
-import { BulkUpload } from "./Modals/BulkUpload";
+import { AddToCollection } from "./Modals/AddToCollection";
+
 export const NewNav = () => {
   const [isSidebarLocked, setSidebarLocked] = useState(true);
   const [isSidebarHoverable, setSidebarHoverable] = useState(false);
   const [isSidebarClosed, setSidebarClosed] = useState(true);
-  const [isBulkUploadModalOpen, setIsBulkUploadModalOpen] = useState(false);
 
   const toggleLock = () => {
     setSidebarLocked(!isSidebarLocked);
     setSidebarHoverable(!isSidebarLocked);
   };
 
-  // Function to open the BulkUpload modal
-  const openBulkUploadModal = () => {
-    setIsBulkUploadModalOpen(true);
-  };
-
-  const closeBulkUploadModal = () => {
-    setIsBulkUploadModalOpen(false);
-  };
+ 
 
   const hideSidebar = () => {
     if (isSidebarHoverable) {
@@ -89,18 +82,22 @@ export const NewNav = () => {
                   <span>Home</span>
                 </Link>
               </li>
-              <li className="item">
-                <Link to="/Collections" className="link flex items-center">
+            <li className="item">
+                <Link to="/collections"  className="link flex items-center">
                   <BiGridAlt className="nav-logo" />
                   <span>Collections</span>
                 </Link>
               </li>
-              <li className="item">
+              
+             <li className="item">
                 <Link to="/" className="link flex items-center">
                   <BiFolder className="nav-logo" />
                   <span>Library</span>
                 </Link>
+                
               </li>
+              
+
               <li className="item">
                 <Link to="/highlights" className="link flex items-center">
                   <BiHighlight className="nav-logo" />
@@ -113,12 +110,7 @@ export const NewNav = () => {
                 <span className="title">Editor</span>
                 <span className="line"></span>
               </div>
-              <li className="item">
-                <Link to="/magic-build" className="link flex items-center">
-                  <BiAddToQueue className="nav-logo" />
-                  <span>New Collection</span>
-                </Link>
-              </li>
+              <AddToCollection/>
             </ul>
             <ul className="menu_item">
               <div className="menu_title flex items-center">
@@ -154,10 +146,7 @@ export const NewNav = () => {
           </div>
         </div>
       </nav>
-      <BulkUpload
-        isOpen={isBulkUploadModalOpen}
-        handleCloseModal={closeBulkUploadModal}
-      />
+      
     </div>
   );
 };

@@ -17,7 +17,10 @@ import { Link } from "react-router-dom";
 export const SignUp = () => {
   return (
     <div className="login-outer-container w-full bg-black flex h-screen">
-      <div className="h-full w-6/12 bg-black flex-factor "></div>
+      <div className="h-full w-6/12 bg-black flex-factor ">  
+      <div className="flex h-full justify-center">
+          <img className="w-4/5" src="signin.svg" alt="" srcset="" />        </div>
+      </div>
       <div className="h-full w-6/12 bg-white border-left flex">
         <div className="flex w-6/12 absolute items-center gap-4 p-4 justify-end">
           <div>Already have an account?</div>

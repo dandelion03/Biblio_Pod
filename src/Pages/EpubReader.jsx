@@ -28,7 +28,7 @@ function EpubReader() {
   const [bookData, setBookData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedTextCoords, setSelectedTextCoords] = useState({ x: 55, y: 0 });
-
+  const [forceUpdate, setForceUpdate] = useState({});
   useEffect(() => {
     const fetchBook = async () => {
       try {
@@ -203,18 +203,22 @@ function EpubReader() {
   return (
     <div className={isDarkTheme ? "dark h-lvh	" : "default h-lvh	"}>
       <div className="titlebar">
-        <TextSelectionCoordinates rendition={rendition} />
+        <TextSelectionCoordinates rendition={rendition} forceUpdate={forceUpdate}
+  setForceUpdate={setForceUpdate}/>
 
         <div className="flex gap-5">
           <Link to="/">
             <BiHomeAlt2 className="icon-bookmark-empty" />
           </Link>
           <ReaderMenu
-            book={book}
-            rendition={rendition}
-            className="icon-bookmark-empty"
-            bookValue={bookValue}
-          />
+  book={book}
+  rendition={rendition}
+  className="icon-bookmark-empty"
+  bookValue={bookValue}
+  forceUpdate={forceUpdate}
+  setForceUpdate={setForceUpdate}
+/>
+
         </div>
 
         <div id="metainfo">

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const TextSelectionCoordinates = ({ rendition }) => {
+const TextSelectionCoordinates = ({ rendition, setForceUpdate }) => {
   const [selectedTextCoords, setSelectedTextCoords] = useState({ x: 0, y: 0 });
   const [selectedColor, setSelectedColor] = useState(null);
   const [lastCfiRange, setLastCfiRange] = useState(null);
@@ -41,6 +41,7 @@ const TextSelectionCoordinates = ({ rendition }) => {
 
   const handleColorSelection = (color) => {
     setSelectedColor(color);
+    setForceUpdate({});
 
     // Manually trigger the highlighting when color is selected
     // Clear all previous highlights

@@ -15,11 +15,12 @@ import {
 } from "../../components/ui/tabs";
 import { flatten } from "./getChapters";
 
-export const ReaderMenu = ({ book, rendition }) => {
+export const ReaderMenu = ({ book, rendition , setForceUpdate}) => {
   const [MenuisOpen, setMenuOpen] = useState(false);
   const [chapters, setChapters] = useState([]);
   const [currentCFI, setCurrentCFI] = useState({});
   const [annotations, setAnnotations] = useState([]);
+  
 
   useEffect(() => {
     const fetchAnnotations = async () => {
@@ -117,18 +118,19 @@ export const ReaderMenu = ({ book, rendition }) => {
   };
   const handleDeleteAnnotation = (cfiRange) => {
     const allAnnotations = Object.values(rendition.annotations._annotations);
-
+  
     // Find the annotation with the matching CFI range
     const annotationToDelete = allAnnotations.find(
       (annotation) => annotation.cfiRange === cfiRange
     );
-    console.log(annotationToDelete);
+  
     if (annotationToDelete) {
       delete rendition.annotations._annotations[annotationToDelete];
       // Trigger a re-render by updating the state
-      forceUpdate({});
+      setForceUpdate({});
     }
   };
+  
 
   return (
     <div>
@@ -196,6 +198,7 @@ export const ReaderMenu = ({ book, rendition }) => {
             <div id="style-4" className="scrollbar text-left p-l0-1 pl-4">
               <div className="force-overflow flex flex-col gap-5">
                 {annotations.map((annotation, index) => {
+                 
                   const { cfiRange, selectedText } = annotation;
                   // Add debug output
                   console.log("Rendering:", annotation);

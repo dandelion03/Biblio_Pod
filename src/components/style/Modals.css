@@ -104,3 +104,9 @@
   font-size: 1.5rem;
   margin: 0.3rem;
 }
+.card_img{
+  object-position: top;
+}
+.w-90{
+  width: 90%;
+}
