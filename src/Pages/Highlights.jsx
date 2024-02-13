@@ -10,7 +10,7 @@ export const Highlights = () => {
     <div className="border-right-highlight"></div>
     </div>
     <div className="w-4/5 ">
-      <div className="flex h-full justify-center">   </div>
+      <div className="flex h-full justify-center"> <img className="opacity-80	w-4/5 object-contain" src="doodle3.jpg" alt="" />  </div>
       </div>
     </div>
     </>

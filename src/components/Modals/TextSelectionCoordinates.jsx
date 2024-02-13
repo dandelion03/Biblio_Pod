@@ -1,30 +1,34 @@
 import React, { useEffect, useState } from "react";
+import { ReaderMenu } from "./ReaderMenu";
+import { EpubReaderDrawer } from "../EpubReaderComponents/EpubReaderDrawer";
 
-const TextSelectionCoordinates = ({ rendition, setForceUpdate }) => {
-  const [selectedTextCoords, setSelectedTextCoords] = useState({ x: 0, y: 0 });
-  const [selectedColor, setSelectedColor] = useState(null);
-  const [lastCfiRange, setLastCfiRange] = useState(null);
+const TextSelectionCoordinates = ({ rendition, setForceUpdate, book, bookValue }) => {
+  const [state, setState] = useState({
+    selectedTextCoords: { x: 0, y: 0 },
+    selectedText: "",
+    selectedColor: null,
+    lastCfiRange: null,
+  });
 
   useEffect(() => {
     const handleTextSelection = (cfiRange) => {
       const range = rendition.getRange(cfiRange);
 
       if (range) {
-        // Clear all previous highlights
-
         const rect = range.getBoundingClientRect();
-        setSelectedTextCoords({ x: rect.x, y: rect.y });
-        const selectedText = range.toString();
-
-        console.log(cfiRange);
-        console.log("Selected Text:", selectedText);
-
-        setLastCfiRange(cfiRange);
+        setState({
+          ...state,
+          selectedTextCoords: { x: rect.x, y: rect.y },
+          selectedText: range.toString(),
+          lastCfiRange: cfiRange,
+        });
       } else {
-        // No valid selection, hide the div
-        setLastCfiRange(null);
-        setSelectedTextCoords({ x: 0, y: 0 });
-      } // Update the lastCfiRange
+        setState({
+          ...state,
+          lastCfiRange: null,
+          selectedTextCoords: { x: 0, y: 0 },
+        });
+      }
     };
 
     if (rendition) {
@@ -34,22 +38,24 @@ const TextSelectionCoordinates = ({ rendition, setForceUpdate }) => {
     return () => {
       if (rendition) {
         rendition.off("selected", handleTextSelection);
-        setSelectedTextCoords({ x: 0, y: 0 });
+        setState({
+          selectedTextCoords: { x: 0, y: 0 },
+          selectedText: "",
+          selectedColor: null,
+          lastCfiRange: null,
+        });
       }
     };
-  }, [rendition, selectedColor]);
+  }, [rendition, state.selectedColor]);
 
   const handleColorSelection = (color) => {
-    setSelectedColor(color);
     setForceUpdate({});
 
-    // Manually trigger the highlighting when color is selected
-    // Clear all previous highlights
-    if (lastCfiRange && rendition.annotations._annotations) {
-      const keyToDelete = lastCfiRange + "highlight";
+    if (state.lastCfiRange && rendition.annotations._annotations) {
+      const keyToDelete = state.lastCfiRange + "highlight";
 
       rendition.annotations.highlight(
-        lastCfiRange,
+        state.lastCfiRange,
         {},
         (e) => {
           console.log(e);
@@ -58,42 +64,59 @@ const TextSelectionCoordinates = ({ rendition, setForceUpdate }) => {
         { fill: color }
       );
 
-      // Reset selectedTextCoords to hide the div
-      setSelectedTextCoords({ x: 0, y: 0 });
-      rendition.display(lastCfiRange);
+      setState({
+        ...state,
+        selectedTextCoords: { x: 0, y: 0 },
+        selectedText: "",
+      });
+
+      rendition.display(state.lastCfiRange);
     }
   };
 
   return (
-    <div
-      className={
-        selectedTextCoords.x === 0 && selectedTextCoords.y === 0 ? "hidden" : ""
-      }
-      style={{
-        position: "absolute",
-        left: `44%`,
-        top: `${selectedTextCoords.y}px`,
-      }}
-    >
-      <div className="max-w-sm p-6 border border-gray-200 rounded-lg bg-gray-100 gap-2.5 flex">
-        <div
-          className="w-5 h-5 rounded-full bg-lime-500 cursor-pointer"
-          onClick={() => handleColorSelection("#00FF00")} // Lime Green
-        ></div>
-        <div
-          className="w-5 h-5 rounded-full bg-green-700 cursor-pointer"
-          onClick={() => handleColorSelection("#008000")} // Green
-        ></div>
-        <div
-          className="w-5 h-5 rounded-full bg-sky-800 cursor-pointer"
-          onClick={() => handleColorSelection("#87CEEB")} // Sky Blue
-        ></div>
-        <div
-          className="w-5 h-5 rounded-full bg-violet-900 cursor-pointer"
-          onClick={() => handleColorSelection("#8A2BE2")} // Violet
-        ></div>
+    <>
+      <ReaderMenu
+        book={book}
+        bookValue={bookValue}
+        rendition={rendition}
+        selectedText={state.selectedColor}
+        className="icon-bookmark-empty"
+      />
+
+      <div
+        className={`${
+          state.selectedText === "" ? "hidden" : ""
+        }`}
+        style={{
+          position: "absolute",
+          left: `44%`,
+          top: `${state.selectedTextCoords.y}px`,
+        }}
+      >
+        <div className="h-8 items-center px-1 max-w-sm  border border-gray-200 rounded-lg bg-gray-100 gap-2.5 flex">
+          <div
+            className="w-5 h-5 rounded-full bg-lime-500 cursor-pointer"
+            onClick={() => handleColorSelection("#00FF00")} // Lime Green
+          ></div>
+          <div
+            className="w-5 h-5 rounded-full bg-green-700 cursor-pointer"
+            onClick={() => handleColorSelection("#008000")} // Green
+          ></div>
+          <div
+            className="w-5 h-5 rounded-full bg-sky-800 cursor-pointer"
+            onClick={() => handleColorSelection("#87CEEB")} // Sky Blue
+          ></div>
+          <div
+            className="w-5 h-5 rounded-full bg-violet-900 cursor-pointer"
+            onClick={() => handleColorSelection("#8A2BE2")} // Violet
+          ></div>
+          <div className="h-full">
+            <EpubReaderDrawer setSelectedColor={handleColorSelection} />
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

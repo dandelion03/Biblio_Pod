@@ -4,16 +4,14 @@ import ePub from "epubjs";
 import axios from "axios";
 import "../index.css";
 import { CiBookmark } from "react-icons/ci";
-import { IoSettingsOutline } from "react-icons/io5";
 import { AiOutlineFullscreen } from "react-icons/ai";
 import { GrNext } from "react-icons/gr";
 import { GrPrevious } from "react-icons/gr";
 import { FiMoon } from "react-icons/fi";
 import { CircularProgress } from "@nextui-org/react";
-import { BiHomeAlt2 } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import TextSelectionCoordinates from "../components/Modals/TextSelectionCoordinates";
-import { ReaderMenu } from "../components/Modals/ReaderMenu";
+import { EpubReaderSettings } from "../components/EpubReaderComponents/EpubReaderSettings";
 
 function EpubReader() {
   const location = useLocation();
@@ -74,12 +72,19 @@ function EpubReader() {
 
     loadBook();
   }, [bookData]);
+  const redrawAnnotations = () => {
+    
+    rendition.views().forEach((view) => (view.pane ? view.pane.render() : null));
 
+};
   const renderBook = (loadedBook) => {
     if (!loadedBook) {
       return;
     }
 
+  if(rendition){
+  rendition.on('rendered', redrawAnnotations);}
+  
     const newRendition = loadedBook.renderTo("viewer", {
       width: "100%",
       height: "90vh",
@@ -95,14 +100,16 @@ function EpubReader() {
     newRendition.themes.register("dark", {
       body: { background: "black", color: "white" },
     });
-    newRendition.themes.register("default", {
+    newRendition.themes.register("white", {
       body: {
         background: "white",
         color: "black",
         
       },
     });
-    newRendition.themes.select(isDarkTheme ? "dark" : "default");
+    newRendition.themes.select(isDarkTheme ? "dark" : "white");
+    redrawAnnotations()
+
   };
 
   useEffect(() => {
@@ -158,10 +165,14 @@ function EpubReader() {
       });
     }
   };
+ 
   const toggleTheme = () => {
     setIsDarkTheme(!isDarkTheme);
     if (rendition) {
-      rendition.themes.select(isDarkTheme ? "default" : "dark");
+      redrawAnnotations()
+      rendition.themes.select(isDarkTheme ? "white" : "dark");
+      
+
     }
   };
 
@@ -203,23 +214,10 @@ function EpubReader() {
   return (
     <div className={isDarkTheme ? "dark h-lvh	" : "default h-lvh	"}>
       <div className="titlebar">
-        <TextSelectionCoordinates rendition={rendition} forceUpdate={forceUpdate}
+        <TextSelectionCoordinates bookValue={bookValue} book={book} rendition={rendition} forceUpdate={forceUpdate}
   setForceUpdate={setForceUpdate}/>
 
-        <div className="flex gap-5">
-          <Link to="/">
-            <BiHomeAlt2 className="icon-bookmark-empty" />
-          </Link>
-          <ReaderMenu
-  book={book}
-  rendition={rendition}
-  className="icon-bookmark-empty"
-  bookValue={bookValue}
-  forceUpdate={forceUpdate}
-  setForceUpdate={setForceUpdate}
-/>
-
-        </div>
+     
 
         <div id="metainfo">
           <span id="book-title">{bookData.authors}</span>
@@ -237,9 +235,7 @@ function EpubReader() {
           <a id="bookmark" className="icon-bookmark-empty">
             <CiBookmark />
           </a>
-          <a id="setting" className="icon-cog">
-            <IoSettingsOutline />
-          </a>
+         <EpubReaderSettings rendition={rendition}/>
           <a
             id="fullscreen"
             onClick={toggleFullscreen}

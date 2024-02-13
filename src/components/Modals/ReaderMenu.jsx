@@ -6,7 +6,9 @@ import { BiHighlight } from "react-icons/bi";
 import "../style/Modals.css";
 import { FaRegBookmark } from "react-icons/fa";
 import { FaRegTrashCan } from "react-icons/fa6";
+import { BiHomeAlt2 } from "react-icons/bi";
 
+import { Link } from "react-router-dom";
 import {
   Tabs,
   TabsContent,
@@ -15,7 +17,7 @@ import {
 } from "../../components/ui/tabs";
 import { flatten } from "./getChapters";
 
-export const ReaderMenu = ({ book, rendition , setForceUpdate}) => {
+export const ReaderMenu = ({ book,bookValue, rendition , setForceUpdate,selectedText}) => {
   const [MenuisOpen, setMenuOpen] = useState(false);
   const [chapters, setChapters] = useState([]);
   const [currentCFI, setCurrentCFI] = useState({});
@@ -59,7 +61,7 @@ export const ReaderMenu = ({ book, rendition , setForceUpdate}) => {
     };
 
     fetchAnnotations();
-  }, [rendition, setAnnotations]);
+  }, [bookValue,selectedText]);
 
   const handleMenuOpening = () => {
     setMenuOpen(!MenuisOpen);
@@ -133,13 +135,21 @@ export const ReaderMenu = ({ book, rendition , setForceUpdate}) => {
   
 
   return (
-    <div>
+    <div className="flex gap-2">
+      <div className="flex gap-5">
+          <Link to="/">
+            <BiHomeAlt2 className="icon-bookmark-empty" />
+          </Link>
+         
+
+        </div>
       <IoMdMenu className="cursor-pointer" onClick={handleMenuOpening} />
       <div
         className={`menu-con flex-col flex w-72 bg-zinc-300 h-screen fixed top-0 left-0 ${
           !MenuisOpen ? "hidden" : "not-hidden"
         }`}
       >
+        
         <div className="flex  w-full gap-8 p-1 justify-between">
           <div></div>
           <IoIosCloseCircleOutline
