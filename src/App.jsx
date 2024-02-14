@@ -7,6 +7,7 @@ import Footer from "./components/Footer";
 import { SignUp } from "./Pages/SignUp";
 import { SignIn } from "./Pages/SignIn";
 import { Highlights } from "./Pages/Highlights";
+import { Collection } from "./Pages/Collection/Collection";
 
 function App() {
   const location = useLocation();
@@ -25,6 +26,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<SignIn />} />
         <Route path="/highlights" element={<Highlights />} />
+        <Route path="/collections" element={<Collection />} />
         {/* <Route path="/search" element={<SearchPage />} /> */}
         <Route path="/read" element={<EpubReader />} />
         {/* <Route path="/Library" element={<MyLibrary />} /> */}
